@@ -17,7 +17,12 @@ const input = document.querySelector<HTMLInputElement>('#task-input')!
 const button = document.querySelector<HTMLButtonElement>('#add-task')!
 const list = document.querySelector<HTMLUListElement>('#task-list')!
 
-const tasks: string[] = []
+type Task = {
+  text: string
+  done: boolean
+}
+
+const tasks: Task[] = []
 
 const escapeHtml = (value: string) =>
   value
@@ -29,7 +34,13 @@ const escapeHtml = (value: string) =>
 
 const renderTasks = () => {
   list.innerHTML = tasks
-    .map(task => `<li class="task-item"><span>${escapeHtml(task)}</span></li>`)
+    .map(
+      (task, index) =>
+        `<li class="task-item${task.done ? ' done' : ''}" data-index="${index}">
+          <span>${escapeHtml(task.text)}</span>
+          <button class="remove-button" type="button" aria-label="Видалити завдання">×</button>
+        </li>`
+    )
     .join('')
 }
 
@@ -44,11 +55,29 @@ app.querySelector('form')!.addEventListener('submit', event => {
   const value = input.value.trim()
   if (!value) return
 
-  tasks.push(value)
+  tasks.push({ text: value, done: false })
   input.value = ''
   updateButtonState()
   renderTasks()
   input.focus()
+})
+
+list.addEventListener('click', event => {
+  const target = event.target as HTMLElement
+  const item = target.closest<HTMLLIElement>('.task-item')
+  if (!item) return
+
+  const index = Number(item.dataset.index)
+  if (Number.isNaN(index) || index < 0 || index >= tasks.length) return
+
+  if (target.classList.contains('remove-button')) {
+    tasks.splice(index, 1)
+    renderTasks()
+    return
+  }
+
+  tasks[index].done = !tasks[index].done
+  renderTasks()
 })
 
 updateButtonState()

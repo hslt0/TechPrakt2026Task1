@@ -85,9 +85,40 @@ button:disabled {
   background: #f8fafc;
   border: 1px solid #e5e7eb;
   color: #111827;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.task-item.done {
+  color: #6b7280;
+}
+
+.task-item.done span {
+  text-decoration: line-through;
 }
 
 .task-item span {
   display: block;
   word-break: break-word;
+}
+
+.remove-button {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.remove-button:hover {
+  background: rgba(71, 85, 255, 0.08);
+  color: #3730a3;
 }
